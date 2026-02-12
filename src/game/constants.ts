@@ -21,6 +21,28 @@ export const COLORS = {
   particle: '#00e5ff',
   nearMiss: '#00ff88',
   roadMarkWhite: '#ffffff44',
+  boss: '#ff2200',
+  bossGlow: '#ff220088',
+  obstacle: '#ff8800',
+  slowmo: '#00ccff',
+  shield: '#00ff88',
+  doublecoins: '#ffd700',
+  autododge: '#cc66ff',
+  energy: '#00ff88',
+};
+
+export const ABILITY_COLORS: Record<string, string> = {
+  slowmo: '#00ccff',
+  shield: '#00ff88',
+  doublecoins: '#ffd700',
+  autododge: '#cc66ff',
+};
+
+export const ABILITY_LABELS: Record<string, string> = {
+  slowmo: 'SLOW MO',
+  shield: 'SHIELD',
+  doublecoins: '2x COINS',
+  autododge: 'AUTO DODGE',
 };
 
 export const INITIAL_SPEED = 3;
@@ -28,7 +50,7 @@ export const MAX_SPEED = 18;
 export const SPEED_INCREMENT = 0.003;
 export const BRAKE_DECEL = 0.15;
 export const LANE_SWITCH_SPEED = 8;
-export const TRAFFIC_SPAWN_INTERVAL = 60; // frames
+export const TRAFFIC_SPAWN_INTERVAL = 60;
 export const COIN_SPAWN_INTERVAL = 90;
 export const NEAR_MISS_DISTANCE = 15;
-export const COMBO_TIMEOUT = 120; // frames
+export const COMBO_TIMEOUT = 120;
