@@ -1,4 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
+import { Settings } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Switch } from '@/components/ui/switch';
 import {
   GameState, Car, Coin, Particle, SpeedLine, Obstacle, PowerUp,
   AbilityState, BossState,
@@ -47,6 +50,10 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ onBack }) => {
   const nearMissSetRef = useRef<Set<Car>>(new Set());
   const animFrameRef = useRef<number>(0);
   const [, forceUpdate] = useState(0);
+  const [showMobileControls, setShowMobileControls] = useState(() => {
+    const saved = localStorage.getItem('rushlane-mobile-controls');
+    return saved !== null ? saved === 'true' : true;
+  });
 
   const startGame = useCallback(() => {
     const s = createInitialState();
@@ -454,38 +461,61 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ onBack }) => {
     return () => cancelAnimationFrame(animFrameRef.current);
   }, [gameLoop, startGame]);
 
+  const handleToggleMobileControls = (checked: boolean) => {
+    setShowMobileControls(checked);
+    localStorage.setItem('rushlane-mobile-controls', String(checked));
+  };
+
   return (
     <div className="flex flex-col items-center gap-4">
-      <canvas
-        ref={canvasRef}
-        width={GAME_WIDTH}
-        height={GAME_HEIGHT}
-        className="rounded-lg border border-border"
-        style={{ maxWidth: '100%', maxHeight: '85vh', imageRendering: 'pixelated' }}
-      />
-      {/* Mobile controls */}
-      <div className="flex gap-3 md:hidden">
-        <button
-          className="w-14 h-14 rounded-xl bg-muted/50 border border-primary/30 flex items-center justify-center text-primary font-display text-lg active:bg-primary/20 select-none"
-          onTouchStart={(e) => { e.preventDefault(); keysRef.current.add('ArrowLeft'); }}
-          onTouchEnd={() => keysRef.current.delete('ArrowLeft')}
-        >◀</button>
-        <button
-          className="w-14 h-14 rounded-xl bg-muted/50 border border-accent/30 flex items-center justify-center text-accent font-display text-lg active:bg-accent/20 select-none"
-          onTouchStart={(e) => { e.preventDefault(); keysRef.current.add('ArrowDown'); }}
-          onTouchEnd={() => keysRef.current.delete('ArrowDown')}
-        >▼</button>
-        <button
-          className="w-14 h-14 rounded-xl bg-muted/50 border border-primary/30 flex items-center justify-center text-primary font-display text-lg active:bg-primary/20 select-none"
-          onTouchStart={(e) => { e.preventDefault(); keysRef.current.add('ArrowRight'); }}
-          onTouchEnd={() => keysRef.current.delete('ArrowRight')}
-        >▶</button>
-        <button
-          className="w-14 h-14 rounded-xl bg-muted/50 border border-neon-green/30 flex items-center justify-center text-neon-green font-display text-xs active:bg-neon-green/20 select-none"
-          onTouchStart={(e) => { e.preventDefault(); keysRef.current.add(' '); }}
-          onTouchEnd={() => keysRef.current.delete(' ')}
-        >⚡</button>
+      <div className="relative w-full flex justify-center">
+        <canvas
+          ref={canvasRef}
+          width={GAME_WIDTH}
+          height={GAME_HEIGHT}
+          className="rounded-lg border border-border"
+          style={{ maxWidth: '100%', maxHeight: '85vh', imageRendering: 'pixelated' }}
+        />
+        <div className="absolute top-2 right-2 md:hidden">
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="w-8 h-8 rounded-lg bg-muted/70 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground">
+                <Settings size={16} />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-48 p-3" align="end">
+              <label className="flex items-center justify-between gap-2 text-sm font-body">
+                <span>Mobile Controls</span>
+                <Switch checked={showMobileControls} onCheckedChange={handleToggleMobileControls} />
+              </label>
+            </PopoverContent>
+          </Popover>
+        </div>
       </div>
+      {showMobileControls && (
+        <div className="flex gap-3 md:hidden">
+          <button
+            className="w-14 h-14 rounded-xl bg-muted/50 border border-primary/30 flex items-center justify-center text-primary font-display text-lg active:bg-primary/20 select-none"
+            onTouchStart={(e) => { e.preventDefault(); keysRef.current.add('ArrowLeft'); }}
+            onTouchEnd={() => keysRef.current.delete('ArrowLeft')}
+          >◀</button>
+          <button
+            className="w-14 h-14 rounded-xl bg-muted/50 border border-accent/30 flex items-center justify-center text-accent font-display text-lg active:bg-accent/20 select-none"
+            onTouchStart={(e) => { e.preventDefault(); keysRef.current.add('ArrowDown'); }}
+            onTouchEnd={() => keysRef.current.delete('ArrowDown')}
+          >▼</button>
+          <button
+            className="w-14 h-14 rounded-xl bg-muted/50 border border-primary/30 flex items-center justify-center text-primary font-display text-lg active:bg-primary/20 select-none"
+            onTouchStart={(e) => { e.preventDefault(); keysRef.current.add('ArrowRight'); }}
+            onTouchEnd={() => keysRef.current.delete('ArrowRight')}
+          >▶</button>
+          <button
+            className="w-14 h-14 rounded-xl bg-muted/50 border border-neon-green/30 flex items-center justify-center text-neon-green font-display text-xs active:bg-neon-green/20 select-none"
+            onTouchStart={(e) => { e.preventDefault(); keysRef.current.add(' '); }}
+            onTouchEnd={() => keysRef.current.delete(' ')}
+          >⚡</button>
+        </div>
+      )}
       <p className="text-muted-foreground text-sm font-body hidden md:block">
         ← → Lanes · ↓ Brake · SPACE Ability · ESC Menu
       </p>
