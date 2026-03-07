@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import MainMenu from '@/components/MainMenu';
-import GameCanvas from '@/game/GameCanvas';
+import Game3D from '@/game3d/Game3D';
+import { GameSettings } from '@/game3d/types';
 
 const Index: React.FC = () => {
   const [screen, setScreen] = useState<'menu' | 'game'>('menu');
+  const [settings, setSettings] = useState<GameSettings>({ difficulty: 'medium', cameraMode: 'third' });
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="min-h-screen bg-background">
       {screen === 'menu' ? (
-        <MainMenu onPlay={() => setScreen('game')} />
+        <MainMenu onPlay={(s) => { setSettings(s); setScreen('game'); }} />
       ) : (
-        <div className="py-4">
-          <GameCanvas onBack={() => setScreen('menu')} />
-        </div>
+        <Game3D onBack={() => setScreen('menu')} settings={settings} />
       )}
     </div>
   );
