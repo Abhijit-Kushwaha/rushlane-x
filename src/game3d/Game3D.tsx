@@ -1,6 +1,5 @@
 import React, { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import Scene from './Scene';
 import HUD from './HUD';
 import { RaceState, GameSettings, TOTAL_LAPS } from './types';
@@ -32,14 +31,14 @@ const Game3D: React.FC<Game3DProps> = ({ onBack, settings }) => {
   };
 
   return (
-    <div className="relative w-full h-screen bg-black">
+    <div className="relative w-full h-screen" style={{ background: '#87ceeb' }}>
       <Canvas
         shadows
         camera={{ fov: 65, near: 0.1, far: 500, position: [0, 6, -12] }}
         gl={{
           antialias: true,
           toneMapping: 3, // ACESFilmicToneMapping
-          toneMappingExposure: 1.2,
+          toneMappingExposure: 1.4,
         }}
         style={{ width: '100%', height: '100%' }}
       >
@@ -49,14 +48,6 @@ const Game3D: React.FC<Game3DProps> = ({ onBack, settings }) => {
             onRaceUpdate={handleRaceUpdate}
             onRaceEnd={handleRaceEnd}
           />
-          <EffectComposer>
-            <Bloom
-              intensity={1.2}
-              luminanceThreshold={0.3}
-              luminanceSmoothing={0.9}
-              mipmapBlur
-            />
-          </EffectComposer>
         </Suspense>
       </Canvas>
       <HUD raceState={raceState} onBack={onBack} />

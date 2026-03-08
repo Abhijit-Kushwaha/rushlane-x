@@ -1,7 +1,6 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Environment } from '@react-three/drei';
 import Track from './Track';
 import CarModel from './CarModel';
 import { useControls } from './useControls';
@@ -87,15 +86,13 @@ const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd }) => {
   const [cameraMode, setCameraMode] = useState<'third' | 'first'>(settings.cameraMode);
   const { camera } = useThree();
 
-  // Track length for lap calculations
   const trackLen = useRef(getTrackLength());
 
   useFrame((state, delta) => {
-    const dt = Math.min(delta, 0.05); // cap delta
+    const dt = Math.min(delta, 0.05);
     const race = raceState.current;
     const ctrl = controls.current;
 
-    // Camera toggle
     if (ctrl.cameraToggle) {
       ctrl.cameraToggle = false;
       setCameraMode((m) => m === 'third' ? 'first' : 'third');
@@ -150,15 +147,14 @@ const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd }) => {
     playerCar.position.z += moveZ;
     playerCar.position.y = 0;
 
-    // Track boundary check
+    // Track boundary
     const closestT = getClosestT(playerCar.position, 200);
     const closestPoint = getPointOnTrack(closestT);
     const distFromCenter = playerCar.position.distanceTo(closestPoint);
     if (distFromCenter > TRACK_WIDTH / 2 + 2) {
-      // Push back toward track
       const toTrack = closestPoint.clone().sub(playerCar.position).normalize();
       playerCar.position.add(toTrack.multiplyScalar(0.5));
-      playerCar.speed *= 0.9;
+      playerCar.speed *= 0.85; // harder penalty for going off-track
     }
 
     // Update player T
@@ -187,7 +183,6 @@ const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd }) => {
       const tangent = getTangentOnTrack(targetT);
       const targetRot = Math.atan2(tangent.x, tangent.z);
 
-      // Lane offset for AI
       const laneOffset = (i - 1) * 2.5;
       const right = new THREE.Vector3().crossVectors(tangent, new THREE.Vector3(0, 1, 0)).normalize();
       const desiredPos = targetPoint.clone().add(right.multiplyScalar(laneOffset));
@@ -195,7 +190,6 @@ const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd }) => {
       ai.position.lerp(desiredPos, 0.08 * dt * 60);
       ai.position.y = 0;
 
-      // Smooth rotation
       let rotDiff = targetRot - ai.rotation;
       while (rotDiff > Math.PI) rotDiff -= Math.PI * 2;
       while (rotDiff < -Math.PI) rotDiff += Math.PI * 2;
@@ -209,11 +203,9 @@ const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd }) => {
       { t: playerT.current, lap: race.lap, isPlayer: true },
       ...aiCars.map((_, i) => ({ t: aiTs.current[i], lap: TOTAL_LAPS - 1, isPlayer: false })),
     ];
-    // Simple position: compare t values (AI are on their own lap counters for simplicity)
     allTs.sort((a, b) => b.lap - a.lap || b.t - a.t);
     race.position = allTs.findIndex((a) => a.isPlayer) + 1;
 
-    // Update player mesh
     if (playerRef.current) {
       playerRef.current.position.copy(playerCar.position);
       playerRef.current.rotation.y = playerCar.rotation;
@@ -225,29 +217,36 @@ const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd }) => {
 
   return (
     <>
-      {/* Lighting */}
-      <ambientLight intensity={0.15} color="#111133" />
+      {/* Daylight sky lighting */}
+      <ambientLight intensity={0.6} color="#fffbe6" />
+      <hemisphereLight args={['#87ceeb', '#4a7c3f', 0.5]} />
       <directionalLight
-        position={[50, 80, 50]}
-        intensity={0.3}
-        color="#334466"
+        position={[80, 120, 60]}
+        intensity={1.8}
+        color="#fff5e0"
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
-        shadow-camera-far={300}
-        shadow-camera-left={-100}
-        shadow-camera-right={200}
-        shadow-camera-top={50}
-        shadow-camera-bottom={-250}
+        shadow-camera-far={400}
+        shadow-camera-left={-150}
+        shadow-camera-right={250}
+        shadow-camera-top={100}
+        shadow-camera-bottom={-300}
       />
-      <fog attach="fog" args={['#050510', 30, 120]} />
+      {/* Fill light from opposite side */}
+      <directionalLight
+        position={[-50, 40, -80]}
+        intensity={0.4}
+        color="#aaccff"
+      />
+      <fog attach="fog" args={['#b8d4e8', 80, 300]} />
 
       <Track />
 
       {/* Player car */}
       <group ref={playerRef}>
         <CarModel
-          color="#00ccff"
+          color="#1a6fff"
           isPlayer
           speed={playerCar.speed}
           drifting={playerCar.drifting}
