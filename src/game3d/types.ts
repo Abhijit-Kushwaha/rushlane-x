@@ -59,22 +59,22 @@ export const AI_COLORS = ['#cc2222', '#dd8800', '#227744'];
 export const AI_NAMES = ['BLAZE', 'STORM', 'VENOM'];
 
 export const PHYSICS = {
-  acceleration: 0.05,
-  brakeForce: 0.1,
-  maxSpeed: 1.5,
-  nitroBoost: 0.08,
-  nitroDrain: 0.9,
-  nitroRegen: 0.02,
-  steerSpeed: 0.022,
-  friction: 0.975,
-  driftFriction: 0.95,
-  driftSteerMultiplier: 1.4,
-  driftLateralGrip: 0.82,
+  acceleration: 0.035,
+  brakeForce: 0.07,
+  maxSpeed: 1.2,
+  nitroBoost: 0.05,
+  nitroDrain: 1.4,
+  nitroRegen: 0.008,
+  steerSpeed: 0.016,
+  friction: 0.96,
+  driftFriction: 0.92,
+  driftSteerMultiplier: 1.2,
+  driftLateralGrip: 0.75,
   gravity: 0.01,
 };
 
 export const DIFFICULTY_SETTINGS = {
-  easy: { aiSpeedMult: 0.9, aiAccuracy: 0.88, reward: [400, 250, 80] },
-  medium: { aiSpeedMult: 1.05, aiAccuracy: 0.94, reward: [700, 400, 200] },
-  hard: { aiSpeedMult: 1.25, aiAccuracy: 0.99, reward: [1000, 700, 350] },
+  easy: { aiSpeedMult: 1.15, aiAccuracy: 0.95, reward: [400, 250, 80] },
+  medium: { aiSpeedMult: 1.35, aiAccuracy: 0.97, reward: [700, 400, 200] },
+  hard: { aiSpeedMult: 1.55, aiAccuracy: 0.99, reward: [1000, 700, 350] },
 };
