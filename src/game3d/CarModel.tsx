@@ -35,53 +35,53 @@ const CarModel: React.FC<CarModelProps> = ({ color, isPlayer, speed = 0, driftin
       {/* Main body */}
       <mesh position={[0, 0.4, 0]} castShadow>
         <boxGeometry args={[1.8, 0.5, 4.2]} />
-        <meshStandardMaterial color={color} metalness={0.8} roughness={0.2} />
+        <meshStandardMaterial color={color} metalness={0.6} roughness={0.3} />
       </mesh>
 
       {/* Cabin */}
       <mesh position={[0, 0.75, -0.2]} castShadow>
         <boxGeometry args={[1.5, 0.45, 2.0]} />
-        <meshStandardMaterial color={color} metalness={0.7} roughness={0.25} />
+        <meshStandardMaterial color={color} metalness={0.5} roughness={0.35} />
       </mesh>
 
       {/* Windshield */}
       <mesh position={[0, 0.78, 0.7]} rotation={[0.3, 0, 0]}>
         <planeGeometry args={[1.3, 0.4]} />
-        <meshStandardMaterial color="#112244" metalness={0.9} roughness={0.1} transparent opacity={0.7} />
+        <meshStandardMaterial color="#6699bb" metalness={0.9} roughness={0.05} transparent opacity={0.6} />
       </mesh>
 
       {/* Rear window */}
       <mesh position={[0, 0.78, -1.1]} rotation={[-0.3, Math.PI, 0]}>
         <planeGeometry args={[1.3, 0.35]} />
-        <meshStandardMaterial color="#112244" metalness={0.9} roughness={0.1} transparent opacity={0.7} />
+        <meshStandardMaterial color="#6699bb" metalness={0.9} roughness={0.05} transparent opacity={0.6} />
       </mesh>
 
       {/* Headlights */}
       <mesh position={[-0.7, 0.35, 2.1]}>
         <sphereGeometry args={[0.12, 8, 8]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={isPlayer ? 3 : 1} />
+        <meshStandardMaterial color="#ffffee" metalness={0.3} roughness={0.2} />
       </mesh>
       <mesh position={[0.7, 0.35, 2.1]}>
         <sphereGeometry args={[0.12, 8, 8]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={isPlayer ? 3 : 1} />
+        <meshStandardMaterial color="#ffffee" metalness={0.3} roughness={0.2} />
       </mesh>
 
       {/* Headlight beams for player */}
       {isPlayer && (
         <>
-          <spotLight position={[-0.7, 0.35, 2.2]} target-position={[-0.7, 0, 15]} angle={0.4} penumbra={0.5} intensity={5} color="#ffffcc" distance={30} castShadow={false} />
-          <spotLight position={[0.7, 0.35, 2.2]} target-position={[0.7, 0, 15]} angle={0.4} penumbra={0.5} intensity={5} color="#ffffcc" distance={30} castShadow={false} />
+          <spotLight position={[-0.7, 0.35, 2.2]} target-position={[-0.7, 0, 15]} angle={0.4} penumbra={0.5} intensity={2} color="#ffffcc" distance={20} castShadow={false} />
+          <spotLight position={[0.7, 0.35, 2.2]} target-position={[0.7, 0, 15]} angle={0.4} penumbra={0.5} intensity={2} color="#ffffcc" distance={20} castShadow={false} />
         </>
       )}
 
       {/* Taillights */}
       <mesh position={[-0.7, 0.35, -2.1]}>
         <sphereGeometry args={[0.1, 8, 8]} />
-        <meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={2} />
+        <meshStandardMaterial color="#cc2222" roughness={0.3} />
       </mesh>
       <mesh position={[0.7, 0.35, -2.1]}>
         <sphereGeometry args={[0.1, 8, 8]} />
-        <meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={2} />
+        <meshStandardMaterial color="#cc2222" roughness={0.3} />
       </mesh>
 
       {/* Wheels */}
@@ -89,7 +89,7 @@ const CarModel: React.FC<CarModelProps> = ({ color, isPlayer, speed = 0, driftin
         {[[-0.9, 0.18, 1.3], [0.9, 0.18, 1.3], [-0.9, 0.18, -1.3], [0.9, 0.18, -1.3]].map(([x, y, z], i) => (
           <mesh key={i} position={[x, y, z]} rotation={[0, 0, Math.PI / 2]} castShadow>
             <cylinderGeometry args={[0.2, 0.2, 0.15, 12]} />
-            <meshStandardMaterial color="#111111" metalness={0.3} roughness={0.8} />
+            <meshStandardMaterial color="#222222" metalness={0.4} roughness={0.7} />
           </mesh>
         ))}
       </group>
@@ -97,20 +97,29 @@ const CarModel: React.FC<CarModelProps> = ({ color, isPlayer, speed = 0, driftin
       {/* Nitro flame */}
       <mesh ref={nitroRef} position={[0, 0.35, -2.5]} visible={false}>
         <coneGeometry args={[0.2, 1.2, 8]} />
-        <meshStandardMaterial color="#0088ff" emissive="#00aaff" emissiveIntensity={5} transparent opacity={0.8} />
+        <meshStandardMaterial color="#ff6600" emissive="#ff4400" emissiveIntensity={3} transparent opacity={0.8} />
       </mesh>
 
-      {/* Drift smoke placeholder - tiny particles when drifting */}
+      {/* Drift dust effect */}
       {drifting && (
         <>
-          <pointLight position={[-0.9, 0.1, -1.3]} color="#ffffff" intensity={0.5} distance={3} />
-          <pointLight position={[0.9, 0.1, -1.3]} color="#ffffff" intensity={0.5} distance={3} />
+          <mesh position={[-0.9, 0.05, -1.5]}>
+            <sphereGeometry args={[0.4, 6, 6]} />
+            <meshStandardMaterial color="#c4a86a" transparent opacity={0.4} roughness={1} />
+          </mesh>
+          <mesh position={[0.9, 0.05, -1.5]}>
+            <sphereGeometry args={[0.4, 6, 6]} />
+            <meshStandardMaterial color="#c4a86a" transparent opacity={0.4} roughness={1} />
+          </mesh>
         </>
       )}
 
-      {/* Underglow for player */}
+      {/* Car shadow underneath */}
       {isPlayer && (
-        <pointLight position={[0, 0.1, 0]} color={color} intensity={2} distance={5} />
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
+          <planeGeometry args={[2.2, 4.6]} />
+          <meshBasicMaterial color="#000000" transparent opacity={0.15} />
+        </mesh>
       )}
     </group>
   );

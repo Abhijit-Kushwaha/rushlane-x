@@ -55,26 +55,26 @@ export const TRACK_POINTS: [number, number, number][] = [
 export const TRACK_WIDTH = 16;
 export const TOTAL_LAPS = 3;
 
-export const AI_COLORS = ['#ff3366', '#ff8800', '#44ff44'];
+export const AI_COLORS = ['#cc2222', '#dd8800', '#227744'];
 export const AI_NAMES = ['BLAZE', 'STORM', 'VENOM'];
 
 export const PHYSICS = {
-  acceleration: 0.08,
-  brakeForce: 0.15,
-  maxSpeed: 1.8,
-  nitroBoost: 0.12,
-  nitroDrain: 0.5,
-  nitroRegen: 0.05,
-  steerSpeed: 0.035,
-  friction: 0.985,
-  driftFriction: 0.97,
-  driftSteerMultiplier: 1.8,
-  driftLateralGrip: 0.92,
+  acceleration: 0.065,
+  brakeForce: 0.12,
+  maxSpeed: 1.6,
+  nitroBoost: 0.1,
+  nitroDrain: 0.7,
+  nitroRegen: 0.03,
+  steerSpeed: 0.028,
+  friction: 0.98,
+  driftFriction: 0.96,
+  driftSteerMultiplier: 1.6,
+  driftLateralGrip: 0.88,
   gravity: 0.01,
 };
 
 export const DIFFICULTY_SETTINGS = {
-  easy: { aiSpeedMult: 0.7, aiAccuracy: 0.8, reward: [600, 350, 150] },
-  medium: { aiSpeedMult: 0.85, aiAccuracy: 0.9, reward: [1000, 600, 300] },
-  hard: { aiSpeedMult: 1.0, aiAccuracy: 0.97, reward: [1500, 900, 500] },
+  easy: { aiSpeedMult: 0.8, aiAccuracy: 0.85, reward: [500, 300, 100] },
+  medium: { aiSpeedMult: 0.95, aiAccuracy: 0.92, reward: [800, 500, 250] },
+  hard: { aiSpeedMult: 1.1, aiAccuracy: 0.98, reward: [1200, 800, 400] },
 };

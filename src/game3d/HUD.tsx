@@ -13,10 +13,10 @@ const HUD: React.FC<HUDProps> = ({ raceState, onBack }) => {
   const nitroPercent = (nitro / maxNitro) * 100;
 
   const positionColors: Record<number, string> = {
-    1: '#ffd700',
-    2: '#c0c0c0',
-    3: '#cd7f32',
-    4: '#888888',
+    1: '#d4a017',
+    2: '#888888',
+    3: '#8b5e3c',
+    4: '#555555',
   };
 
   const formatTime = (t: number) => {
@@ -33,9 +33,9 @@ const HUD: React.FC<HUDProps> = ({ raceState, onBack }) => {
         onClick={onBack}
         className="absolute top-3 left-3 pointer-events-auto px-3 py-1.5 rounded-lg text-xs font-bold tracking-wider"
         style={{
-          background: 'rgba(0,0,0,0.6)',
-          color: '#aabbcc',
-          border: '1px solid #333',
+          background: 'rgba(255,255,255,0.85)',
+          color: '#333',
+          border: '1px solid #ccc',
           backdropFilter: 'blur(4px)',
         }}
       >
@@ -44,24 +44,23 @@ const HUD: React.FC<HUDProps> = ({ raceState, onBack }) => {
 
       {/* Speed */}
       <div className="absolute bottom-6 right-6 text-right">
-        <div className="text-5xl font-black" style={{ color: '#00e5ff', textShadow: '0 0 20px #00e5ff88' }}>
+        <div className="text-5xl font-black" style={{ color: '#1a1a1a', textShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
           {Math.floor(speed)}
         </div>
-        <div className="text-xs tracking-widest" style={{ color: '#668899' }}>KM/H</div>
+        <div className="text-xs tracking-widest" style={{ color: '#555' }}>KM/H</div>
       </div>
 
       {/* Nitro bar */}
       <div className="absolute bottom-6 left-6" style={{ width: 180 }}>
-        <div className="text-xs tracking-widest mb-1" style={{ color: '#668899' }}>NITRO</div>
-        <div className="rounded-full overflow-hidden" style={{ height: 8, background: 'rgba(0,0,0,0.5)' }}>
+        <div className="text-xs tracking-widest mb-1" style={{ color: '#555' }}>NITRO</div>
+        <div className="rounded-full overflow-hidden" style={{ height: 8, background: 'rgba(0,0,0,0.15)' }}>
           <div
             className="h-full rounded-full transition-all duration-100"
             style={{
               width: `${nitroPercent}%`,
               background: nitroPercent > 30
-                ? 'linear-gradient(90deg, #0088ff, #00ccff)'
-                : 'linear-gradient(90deg, #ff4400, #ff8800)',
-              boxShadow: nitroPercent > 30 ? '0 0 10px #00ccff88' : '0 0 10px #ff440088',
+                ? 'linear-gradient(90deg, #1a6fff, #4a9fff)'
+                : 'linear-gradient(90deg, #cc3300, #ff6600)',
             }}
           />
         </div>
@@ -71,7 +70,7 @@ const HUD: React.FC<HUDProps> = ({ raceState, onBack }) => {
       <div className="absolute top-4 right-6 text-right">
         <div
           className="text-5xl font-black"
-          style={{ color: positionColors[raceState.position] || '#fff', textShadow: '0 0 15px rgba(255,255,255,0.3)' }}
+          style={{ color: positionColors[raceState.position] || '#333', textShadow: '0 2px 6px rgba(0,0,0,0.15)' }}
         >
           {raceState.position}<sup className="text-lg">{getOrdinal(raceState.position)}</sup>
         </div>
@@ -79,15 +78,15 @@ const HUD: React.FC<HUDProps> = ({ raceState, onBack }) => {
 
       {/* Lap */}
       <div className="absolute top-4 left-1/2 -translate-x-1/2 text-center">
-        <div className="text-xs tracking-widest" style={{ color: '#668899' }}>LAP</div>
-        <div className="text-2xl font-bold" style={{ color: '#ffffff' }}>
+        <div className="text-xs tracking-widest" style={{ color: '#555' }}>LAP</div>
+        <div className="text-2xl font-bold" style={{ color: '#1a1a1a' }}>
           {Math.min(raceState.lap + 1, raceState.totalLaps)} / {raceState.totalLaps}
         </div>
       </div>
 
       {/* Time */}
       <div className="absolute top-16 left-1/2 -translate-x-1/2 text-center">
-        <div className="text-lg font-mono" style={{ color: '#aabbcc' }}>
+        <div className="text-lg font-mono" style={{ color: '#333' }}>
           {formatTime(raceState.raceTime)}
         </div>
       </div>
@@ -97,7 +96,7 @@ const HUD: React.FC<HUDProps> = ({ raceState, onBack }) => {
         <div className="absolute inset-0 flex items-center justify-center">
           <div
             className="text-8xl font-black animate-pulse"
-            style={{ color: '#ff4400', textShadow: '0 0 40px #ff440088' }}
+            style={{ color: '#cc2200', textShadow: '0 4px 20px rgba(200,0,0,0.3)' }}
           >
             {raceState.countdownTimer > 1 ? Math.ceil(raceState.countdownTimer) : 'GO!'}
           </div>
@@ -110,30 +109,31 @@ const HUD: React.FC<HUDProps> = ({ raceState, onBack }) => {
           <div
             className="text-center p-8 rounded-2xl"
             style={{
-              background: 'rgba(0,0,0,0.85)',
-              border: '2px solid #333',
-              backdropFilter: 'blur(8px)',
+              background: 'rgba(255,255,255,0.92)',
+              border: '2px solid #ddd',
+              backdropFilter: 'blur(12px)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
             }}
           >
-            <div className="text-4xl font-black mb-4" style={{ color: '#ffd700', textShadow: '0 0 20px #ffd70088' }}>
+            <div className="text-4xl font-black mb-4" style={{ color: '#d4a017' }}>
               RACE COMPLETE
             </div>
             <div className="text-6xl font-black mb-2" style={{ color: positionColors[raceState.position] }}>
               {raceState.position}<sup className="text-2xl">{getOrdinal(raceState.position)}</sup> PLACE
             </div>
-            <div className="text-lg mb-2" style={{ color: '#aabbcc' }}>
+            <div className="text-lg mb-2" style={{ color: '#555' }}>
               Time: {formatTime(raceState.raceTime)}
             </div>
-            <div className="text-2xl font-bold mb-6" style={{ color: '#00ff88' }}>
+            <div className="text-2xl font-bold mb-6" style={{ color: '#2d8a4e' }}>
               💰 ${raceState.money}
             </div>
             <button
               onClick={onBack}
               className="px-8 py-3 rounded-xl text-lg font-bold tracking-wider"
               style={{
-                background: 'linear-gradient(135deg, #00ccff, #0066ff)',
+                background: 'linear-gradient(135deg, #1a6fff, #0044cc)',
                 color: '#fff',
-                boxShadow: '0 0 20px #00ccff44',
+                boxShadow: '0 4px 15px rgba(26,111,255,0.3)',
               }}
             >
               CONTINUE
@@ -144,7 +144,7 @@ const HUD: React.FC<HUDProps> = ({ raceState, onBack }) => {
 
       {/* Controls hint */}
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
-        <div className="text-[10px] tracking-wider" style={{ color: '#334455' }}>
+        <div className="text-[10px] tracking-wider" style={{ color: 'rgba(0,0,0,0.3)' }}>
           W/S – Accel/Brake | A/D – Steer | SHIFT – Nitro | SPACE – Drift | C – Camera
         </div>
       </div>
