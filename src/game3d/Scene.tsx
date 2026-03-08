@@ -65,8 +65,9 @@ function createAICars(difficulty: GameSettings['difficulty']): AICarState[] {
   });
 }
 
-const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd }) => {
+const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd, playerUpgrades }) => {
   const controls = useControls();
+  const upgradeMods = useMemo(() => applyUpgradesToPhysics(playerUpgrades || { engine: 0, nitro: 0, tires: 0, handling: 0 }), [playerUpgrades]);
   const playerRef = useRef<THREE.Group>(null);
   const cameraOffset = useRef(new THREE.Vector3(0, 6, -12));
 
