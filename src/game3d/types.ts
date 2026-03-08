@@ -55,7 +55,7 @@ export const TRACK_POINTS: [number, number, number][] = [
 export const TRACK_WIDTH = 16;
 export const TOTAL_LAPS = 3;
 
-export const AI_COLORS = ['#ff3366', '#ff8800', '#44ff44'];
+export const AI_COLORS = ['#cc2222', '#dd8800', '#227744'];
 export const AI_NAMES = ['BLAZE', 'STORM', 'VENOM'];
 
 export const PHYSICS = {
