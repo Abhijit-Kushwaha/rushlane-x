@@ -27,18 +27,7 @@ const Track: React.FC = () => {
     return positions;
   }, []);
 
-  // Trees scattered around
-  const trees = useMemo(() => {
-    const result: { x: number; z: number; scale: number; type: number }[] = [];
-    for (let i = 0; i < 80; i++) {
-      const angle = (i / 80) * Math.PI * 2 + Math.random() * 0.3;
-      const r = 30 + Math.random() * 90;
-      const x = 55 + Math.cos(angle) * r;
-      const z = -110 + Math.sin(angle) * r;
-      result.push({ x, z, scale: 0.8 + Math.random() * 1.5, type: i % 3 });
-    }
-    return result;
-  }, []);
+
 
   return (
     <group>
@@ -96,25 +85,7 @@ const Track: React.FC = () => {
         </group>
       ))}
 
-      {/* Trees */}
-      {trees.map((tree, i) => (
-        <group key={`tree-${i}`} position={[tree.x, 0, tree.z]} scale={tree.scale}>
-          {/* Trunk */}
-          <mesh position={[0, 1.5, 0]} castShadow>
-            <cylinderGeometry args={[0.2, 0.3, 3, 8]} />
-            <meshStandardMaterial color="#5c3a1e" roughness={0.9} />
-          </mesh>
-          {/* Foliage - layered spheres */}
-          <mesh position={[0, 3.5, 0]} castShadow>
-            <sphereGeometry args={[1.5, 8, 8]} />
-            <meshStandardMaterial color={tree.type === 0 ? '#2d6b1e' : tree.type === 1 ? '#3a8525' : '#1e5c14'} roughness={0.85} />
-          </mesh>
-          <mesh position={[0, 4.3, 0]} castShadow>
-            <sphereGeometry args={[1.0, 8, 8]} />
-            <meshStandardMaterial color={tree.type === 0 ? '#3a8525' : tree.type === 1 ? '#2d6b1e' : '#3a8525'} roughness={0.85} />
-          </mesh>
-        </group>
-      ))}
+
 
       {/* Distant hills */}
       {Array.from({ length: 8 }).map((_, i) => {
