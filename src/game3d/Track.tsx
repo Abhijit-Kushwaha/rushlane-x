@@ -27,18 +27,7 @@ const Track: React.FC = () => {
     return positions;
   }, []);
 
-  // Trees scattered around
-  const trees = useMemo(() => {
-    const result: { x: number; z: number; scale: number; type: number }[] = [];
-    for (let i = 0; i < 80; i++) {
-      const angle = (i / 80) * Math.PI * 2 + Math.random() * 0.3;
-      const r = 30 + Math.random() * 90;
-      const x = 55 + Math.cos(angle) * r;
-      const z = -110 + Math.sin(angle) * r;
-      result.push({ x, z, scale: 0.8 + Math.random() * 1.5, type: i % 3 });
-    }
-    return result;
-  }, []);
+
 
   return (
     <group>
