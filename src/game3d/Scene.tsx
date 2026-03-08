@@ -117,20 +117,22 @@ const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd, player
 
     race.raceTime += dt;
 
-    // === Player physics ===
+    // === Player physics (with upgrades) ===
     const P = PHYSICS;
+    const U = upgradeMods;
+    const maxSpd = P.maxSpeed * U.maxSpeedMult;
 
     if (ctrl.forward) {
-      playerCar.speed = Math.min(P.maxSpeed, playerCar.speed + P.acceleration * dt * 60);
+      playerCar.speed = Math.min(maxSpd, playerCar.speed + P.acceleration * U.accelMult * dt * 60);
     }
     if (ctrl.backward) {
-      playerCar.speed = Math.max(-P.maxSpeed * 0.3, playerCar.speed - P.brakeForce * dt * 60);
+      playerCar.speed = Math.max(-maxSpd * 0.3, playerCar.speed - P.brakeForce * dt * 60);
     }
     if (ctrl.nitro && playerCar.nitro > 0 && playerCar.speed > 0) {
-      playerCar.speed = Math.min(P.maxSpeed * 1.4, playerCar.speed + P.nitroBoost * dt * 60);
-      playerCar.nitro = Math.max(0, playerCar.nitro - P.nitroDrain * dt * 60);
+      playerCar.speed = Math.min(maxSpd * 1.4, playerCar.speed + P.nitroBoost * U.nitroBoostMult * dt * 60);
+      playerCar.nitro = Math.max(0, playerCar.nitro - P.nitroDrain * U.nitroDrainMult * dt * 60);
     } else if (playerCar.nitro < playerCar.maxNitro && !ctrl.nitro) {
-      playerCar.nitro = Math.min(playerCar.maxNitro, playerCar.nitro + P.nitroRegen * dt * 60);
+      playerCar.nitro = Math.min(playerCar.maxNitro, playerCar.nitro + P.nitroRegen * U.nitroRegenMult * dt * 60);
     }
 
     // Steering
