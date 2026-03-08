@@ -136,7 +136,7 @@ const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd, player
     }
 
     // Steering
-    const steerAmount = P.steerSpeed * (playerCar.drifting ? P.driftSteerMultiplier : 1) * dt * 60;
+    const steerAmount = P.steerSpeed * U.steerMult * (playerCar.drifting ? P.driftSteerMultiplier * U.driftSteerMult : 1) * dt * 60;
     if (ctrl.left) playerCar.rotation += steerAmount * Math.sign(playerCar.speed || 1);
     if (ctrl.right) playerCar.rotation -= steerAmount * Math.sign(playerCar.speed || 1);
 
