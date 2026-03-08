@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import Track from './Track';
@@ -12,11 +12,13 @@ import {
 import {
   getPointOnTrack, getTangentOnTrack, getClosestT, getTrackLength,
 } from './trackUtils';
+import { PlayerUpgrades, applyUpgradesToPhysics } from './progression';
 
 interface SceneProps {
   settings: GameSettings;
   onRaceUpdate: (state: RaceState) => void;
   onRaceEnd: (state: RaceState) => void;
+  playerUpgrades?: PlayerUpgrades;
 }
 
 function createPlayerCar(): CarState {
