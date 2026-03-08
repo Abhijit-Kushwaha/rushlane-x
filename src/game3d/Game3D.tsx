@@ -3,13 +3,16 @@ import { Canvas } from '@react-three/fiber';
 import Scene from './Scene';
 import HUD from './HUD';
 import { RaceState, GameSettings, TOTAL_LAPS } from './types';
+import { PlayerUpgrades } from './progression';
 
 interface Game3DProps {
   onBack: () => void;
   settings?: GameSettings;
+  playerUpgrades?: PlayerUpgrades;
+  onRaceEnd?: (money: number) => void;
 }
 
-const Game3D: React.FC<Game3DProps> = ({ onBack, settings }) => {
+const Game3D: React.FC<Game3DProps> = ({ onBack, settings, playerUpgrades, onRaceEnd }) => {
   const gameSettings: GameSettings = settings || { difficulty: 'medium', cameraMode: 'third' };
   const [raceState, setRaceState] = useState<RaceState & { speed?: number; nitro?: number; maxNitro?: number }>({
     status: 'countdown',
@@ -28,6 +31,9 @@ const Game3D: React.FC<Game3DProps> = ({ onBack, settings }) => {
 
   const handleRaceEnd = (state: RaceState) => {
     setRaceState(state as any);
+    if (onRaceEnd && state.money) {
+      onRaceEnd(state.money);
+    }
   };
 
   return (
@@ -37,7 +43,7 @@ const Game3D: React.FC<Game3DProps> = ({ onBack, settings }) => {
         camera={{ fov: 65, near: 0.1, far: 500, position: [0, 6, -12] }}
         gl={{
           antialias: true,
-          toneMapping: 3, // ACESFilmicToneMapping
+          toneMapping: 3,
           toneMappingExposure: 1.4,
         }}
         style={{ width: '100%', height: '100%' }}
@@ -47,6 +53,7 @@ const Game3D: React.FC<Game3DProps> = ({ onBack, settings }) => {
             settings={gameSettings}
             onRaceUpdate={handleRaceUpdate}
             onRaceEnd={handleRaceEnd}
+            playerUpgrades={playerUpgrades}
           />
         </Suspense>
       </Canvas>
