@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import Track from './Track';
@@ -12,11 +12,13 @@ import {
 import {
   getPointOnTrack, getTangentOnTrack, getClosestT, getTrackLength,
 } from './trackUtils';
+import { PlayerUpgrades, applyUpgradesToPhysics } from './progression';
 
 interface SceneProps {
   settings: GameSettings;
   onRaceUpdate: (state: RaceState) => void;
   onRaceEnd: (state: RaceState) => void;
+  playerUpgrades?: PlayerUpgrades;
 }
 
 function createPlayerCar(): CarState {
@@ -63,8 +65,9 @@ function createAICars(difficulty: GameSettings['difficulty']): AICarState[] {
   });
 }
 
-const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd }) => {
+const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd, playerUpgrades }) => {
   const controls = useControls();
+  const upgradeMods = useMemo(() => applyUpgradesToPhysics(playerUpgrades || { engine: 0, nitro: 0, tires: 0, handling: 0 }), [playerUpgrades]);
   const playerRef = useRef<THREE.Group>(null);
   const cameraOffset = useRef(new THREE.Vector3(0, 6, -12));
 
@@ -114,24 +117,26 @@ const Scene: React.FC<SceneProps> = ({ settings, onRaceUpdate, onRaceEnd }) => {
 
     race.raceTime += dt;
 
-    // === Player physics ===
+    // === Player physics (with upgrades) ===
     const P = PHYSICS;
+    const U = upgradeMods;
+    const maxSpd = P.maxSpeed * U.maxSpeedMult;
 
     if (ctrl.forward) {
-      playerCar.speed = Math.min(P.maxSpeed, playerCar.speed + P.acceleration * dt * 60);
+      playerCar.speed = Math.min(maxSpd, playerCar.speed + P.acceleration * U.accelMult * dt * 60);
     }
     if (ctrl.backward) {
-      playerCar.speed = Math.max(-P.maxSpeed * 0.3, playerCar.speed - P.brakeForce * dt * 60);
+      playerCar.speed = Math.max(-maxSpd * 0.3, playerCar.speed - P.brakeForce * dt * 60);
     }
     if (ctrl.nitro && playerCar.nitro > 0 && playerCar.speed > 0) {
-      playerCar.speed = Math.min(P.maxSpeed * 1.4, playerCar.speed + P.nitroBoost * dt * 60);
-      playerCar.nitro = Math.max(0, playerCar.nitro - P.nitroDrain * dt * 60);
+      playerCar.speed = Math.min(maxSpd * 1.4, playerCar.speed + P.nitroBoost * U.nitroBoostMult * dt * 60);
+      playerCar.nitro = Math.max(0, playerCar.nitro - P.nitroDrain * U.nitroDrainMult * dt * 60);
     } else if (playerCar.nitro < playerCar.maxNitro && !ctrl.nitro) {
-      playerCar.nitro = Math.min(playerCar.maxNitro, playerCar.nitro + P.nitroRegen * dt * 60);
+      playerCar.nitro = Math.min(playerCar.maxNitro, playerCar.nitro + P.nitroRegen * U.nitroRegenMult * dt * 60);
     }
 
     // Steering
-    const steerAmount = P.steerSpeed * (playerCar.drifting ? P.driftSteerMultiplier : 1) * dt * 60;
+    const steerAmount = P.steerSpeed * U.steerMult * (playerCar.drifting ? P.driftSteerMultiplier * U.driftSteerMult : 1) * dt * 60;
     if (ctrl.left) playerCar.rotation += steerAmount * Math.sign(playerCar.speed || 1);
     if (ctrl.right) playerCar.rotation -= steerAmount * Math.sign(playerCar.speed || 1);
 

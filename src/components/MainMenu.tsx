@@ -3,9 +3,11 @@ import { GameSettings } from '@/game3d/types';
 
 interface MainMenuProps {
   onPlay: (settings: GameSettings) => void;
+  onGarage: () => void;
+  money: number;
 }
 
-const MainMenu: React.FC<MainMenuProps> = ({ onPlay }) => {
+const MainMenu: React.FC<MainMenuProps> = ({ onPlay, onGarage, money }) => {
   const [difficulty, setDifficulty] = useState<GameSettings['difficulty']>('medium');
 
   return (
@@ -27,9 +29,13 @@ const MainMenu: React.FC<MainMenuProps> = ({ onPlay }) => {
         ))}
       </div>
 
+      {/* Money display */}
+      <div className="absolute top-4 right-6 z-20">
+        <span className="font-display text-lg font-bold text-accent tracking-wider">💰 ${money}</span>
+      </div>
+
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center gap-8 px-4">
-        {/* Title */}
         <div className="text-center animate-slide-up">
           <h1 className="font-display text-5xl md:text-7xl font-black tracking-wider text-primary text-glow-cyan">
             RUSHLANE
@@ -66,17 +72,28 @@ const MainMenu: React.FC<MainMenuProps> = ({ onPlay }) => {
           </div>
         </div>
 
-        {/* Play button */}
-        <button
-          onClick={() => onPlay({ difficulty, cameraMode: 'third' })}
-          className="group relative mt-4 animate-slide-up"
-          style={{ animationDelay: '0.3s' }}
-        >
-          <div className="absolute inset-0 rounded-2xl bg-primary/20 blur-xl group-hover:bg-primary/30 transition-all" />
-          <div className="relative px-12 py-4 rounded-2xl neon-border bg-muted/60 backdrop-blur font-display text-xl font-bold text-primary tracking-widest hover:bg-muted/80 transition-all active:scale-95">
-            ▶ RACE
-          </div>
-        </button>
+        {/* Buttons */}
+        <div className="flex gap-4 mt-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+          <button
+            onClick={() => onPlay({ difficulty, cameraMode: 'third' })}
+            className="group relative"
+          >
+            <div className="absolute inset-0 rounded-2xl bg-primary/20 blur-xl group-hover:bg-primary/30 transition-all" />
+            <div className="relative px-10 py-4 rounded-2xl neon-border bg-muted/60 backdrop-blur font-display text-xl font-bold text-primary tracking-widest hover:bg-muted/80 transition-all active:scale-95">
+              ▶ RACE
+            </div>
+          </button>
+
+          <button
+            onClick={onGarage}
+            className="group relative"
+          >
+            <div className="absolute inset-0 rounded-2xl bg-secondary/20 blur-xl group-hover:bg-secondary/30 transition-all" />
+            <div className="relative px-8 py-4 rounded-2xl neon-border-magenta bg-muted/60 backdrop-blur font-display text-xl font-bold text-secondary tracking-widest hover:bg-muted/80 transition-all active:scale-95">
+              🔧 GARAGE
+            </div>
+          </button>
+        </div>
 
         {/* Controls hint */}
         <div className="flex flex-col items-center gap-2 mt-6 animate-slide-up" style={{ animationDelay: '0.5s' }}>
